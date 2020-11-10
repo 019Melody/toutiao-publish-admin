@@ -34,7 +34,7 @@
         </el-menu-item>
         <el-menu-item index="/settings">
           <i class="el-icon-setting"></i>
-          <span slot="title">导航四</span>
+          <span slot="title">个人设置</span>
         </el-menu-item>
       </el-menu>
 </template>
