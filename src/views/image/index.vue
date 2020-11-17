@@ -39,14 +39,6 @@
             v-if="isShowSelected && selected === index"
           ></div>
           <div v-if="isShowAction" class="image-action">
-            <!--
-              class 样式绑定
-               {
-                  CSS类名: 布尔值
-               }
-               true：作用类名
-               false：不作用类名
-             -->
             <el-button
               type="warning"
               :icon="img.is_collected ? 'el-icon-star-on' : 'el-icon-star-off'"
@@ -71,6 +63,8 @@
       <el-pagination
         background
         layout="prev, pager, next"
+        :page-size="pageSize"
+        :current-page.sync="page"
         @current-change="onPageChange"
         :total="totalCount">
       </el-pagination>
@@ -96,12 +90,32 @@
 </template>
 
 <script>
-import { getImages } from '@/api/image'
+import { getImages, collectImage, deleteImage } from '@/api/image'
 
 export default {
   name: 'ImageIndex',
   components: {},
-  props: {},
+  props: {
+    foo: {
+      type: Number,
+      // required: true,
+      default: 123
+    },
+    // 是否显示添加素材
+    isShowAdd: {
+      type: Boolean, // 布尔值
+      default: true // 默认值
+    },
+    // 是否显示图片下方的操作（收藏和删除）
+    isShowAction: {
+      type: Boolean,
+      default: true
+    },
+    isShowSelected: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     const user = JSON.parse(window.localStorage.getItem('user'))
     return {
@@ -152,6 +166,31 @@ export default {
     },
     onPageChange (page) {
       this.loadImages(page)
+    },
+    onCollect (img) {
+      // 展示 loading
+      img.loading = true
+      collectImage(img.id, !img.is_collected).then(res => {
+        // 更新视图状态
+        img.is_collected = !img.is_collected
+        // 关闭 loading
+        img.loading = false
+      })
+      // if (img.is_collected) {
+      //   // 已收藏，取消收藏
+      //   collectImage(img.id, false)
+      // } else {
+      //   // 没有收藏，添加收藏
+      //   collectImage(img.id, true)
+      // }
+    },
+    onDelete (img) {
+      img.loading = true
+      deleteImage(img.id).then(res => {
+        // 重新加载数据列表
+        this.loadImages(this.page)
+        img.loading = false
+      })
     }
   }
 }
@@ -162,5 +201,36 @@ export default {
   padding-bottom: 20px;
   display: flex;
   justify-content: space-between;
+}
+
+.image-item {
+  position: relative;
+}
+
+.image-action {
+  font-size: 25px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  color: #fff;
+  height: 40px;
+  background-color: rgba(204, 204, 204, .5);
+  position: absolute;
+  bottom: 4px;
+  left: 5px;
+  right: 5px;
+}
+
+.selected {
+  background: url(./selected.png) no-repeat;
+  background-size: cover;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
