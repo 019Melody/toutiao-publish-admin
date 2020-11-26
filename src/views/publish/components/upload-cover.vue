@@ -53,7 +53,7 @@
 
 <script>
 import { uploadImage } from '@/api/image'
-import ImageList from '@/views/image/index'
+import ImageList from '@/views/image/components/image-list'
 
 export default {
   name: 'UploadCover',

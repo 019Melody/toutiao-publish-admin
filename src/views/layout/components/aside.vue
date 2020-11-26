@@ -1,7 +1,7 @@
 <template>
   <el-menu
-        class="nav-menu"
-        default-active="/"
+        class="nav-menu el-menu-vertical-demo"
+        :default-active="$route.path"
         background-color="#002033"
         text-color="#fff"
         active-text-color="#ffd04b"
@@ -58,8 +58,13 @@ export default {
 <style scoped lang="less">
 .nav-menu {
   .iconfont {
-    margin-right: 5px;
+    margin-right: 10px;
     padding-left: 5px;
   }
+}
+
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+  width: 200px;
+  min-height: 400px;
 }
 </style>
